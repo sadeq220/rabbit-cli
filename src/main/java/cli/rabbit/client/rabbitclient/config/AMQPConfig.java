@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
@@ -75,6 +76,21 @@ public class AMQPConfig {
         messageListenerContainer.setAdviceChain(retryOperationsInterceptor);
         messageListenerContainer.setDefaultRequeueRejected(false);
         return messageListenerContainer;
+    }
+    /**
+     * Provides synchronous send and receive methods
+     *  delegate to an instance of
+     *  {@link org.springframework.amqp.support.converter.MessageConverter} to perform conversion
+     *  to and from AMQP byte[] payload type.
+     *
+     *  Also supports basic RPC(request/reply) pattern (send to exchange and expect result form queue) e.g.
+     *        Message sendAndReceive(String routingKey, Message message) throws AmqpException;
+     * 		  amqpTemplate sets reply-to header to an exclusive queue
+     */
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        return rabbitTemplate;
     }
 
 }
