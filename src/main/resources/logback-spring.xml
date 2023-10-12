@@ -36,5 +36,8 @@
     <logger name="cli.rabbit.client.rabbitclient.consumer" level="INFO">
         <appender-ref ref="STDOUT" />
     </logger>
+    <logger name="cli.rabbit.client.rabbitclient.publisher" level="INFO">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
 </configuration>

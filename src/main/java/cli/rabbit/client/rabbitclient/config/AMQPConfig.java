@@ -60,7 +60,7 @@ public class AMQPConfig {
     /**
      * define messageListenerContainer
      */
-    @ConditionalOnProperty
+    @ConditionalOnProperty(name = "application.mode",havingValue = "consumer")
     public SimpleMessageListenerContainer createMessageListenerContainer(ConnectionFactory connectionFactory,
                                                                          @Value("${amqp.queue.listener}") String queueName,
                                                                          AMQPConsumer messageListener,
