@@ -10,7 +10,7 @@
     <appender name="STDOUT"
               class="ch.qos.logback.core.ConsoleAppender" >
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n</pattern>
+            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr(%m%n){cyan}</pattern>
             <charset>${CONSOLE_LOG_CHARSET}</charset>
         </encoder>
     </appender>
@@ -34,6 +34,9 @@
         <appender-ref ref="RollingFile" />
     </root>
     <logger name="cli.rabbit.client.rabbitclient.consumer" level="INFO">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="cli.rabbit.client.rabbitclient.config" level="INFO">
         <appender-ref ref="STDOUT" />
     </logger>
     <logger name="cli.rabbit.client.rabbitclient.publisher" level="INFO">

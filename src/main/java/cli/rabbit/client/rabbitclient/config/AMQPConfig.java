@@ -1,6 +1,8 @@
 package cli.rabbit.client.rabbitclient.config;
 
 import cli.rabbit.client.rabbitclient.consumer.AMQPConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -15,6 +17,7 @@ import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 
 @Configuration
 public class AMQPConfig {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Bean
     public ConnectionFactory connectionAndChannelsToRabbitmqMessageBroker(){
@@ -67,6 +70,7 @@ public class AMQPConfig {
                                                                          RetryOperationsInterceptor retryOperationsInterceptor){
         SimpleMessageListenerContainer messageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         messageListenerContainer.addQueueNames(queueName);
+        logger.info("listening on queue: {}",queueName);
         messageListenerContainer.setMessageListener(messageListener);
         messageListenerContainer.setAdviceChain(retryOperationsInterceptor);
         messageListenerContainer.setDefaultRequeueRejected(false);
