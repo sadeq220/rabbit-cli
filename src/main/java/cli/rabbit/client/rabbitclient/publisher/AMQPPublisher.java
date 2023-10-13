@@ -44,6 +44,9 @@ public class AMQPPublisher implements ApplicationRunner {
     }
     private Message constructAMQPMessage(String payload){
         byte[] payloadBytes = payload.getBytes(StandardCharsets.UTF_8);
-        return MessageBuilder.withBody(payloadBytes).build();
+        return MessageBuilder
+                .withBody(payloadBytes)
+                .setContentEncoding("UTF-8")
+                .build();
     }
 }
