@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 /**
  * Publishing messages is an asynchronous mechanism and, by default, messages that cannot be
  * routed are dropped by RabbitMQ. For successful publishing, you can receive an asynchronous
- * confirm, as described in Correlated Publisher Confirms and Returns.
+ * confirmation, as described in Correlated Publisher Confirms and Returns.
+ * • Publish to an exchange but there is no matching destination queue. => publisher returns
+ * • Publish to a non-existent exchange. => channel will be closed by the broker => 1.Channel listeners 2.publisher confirm
  */
 public class LoggerConfirmCallback implements RabbitTemplate.ConfirmCallback {
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -26,7 +28,11 @@ public class LoggerConfirmCallback implements RabbitTemplate.ConfirmCallback {
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
     if (ack){
         ReturnedMessage returned = correlationData.getReturned();
-        logger.info("message successfully published!");
+        if (returned == null){
+            logger.info("message successfully published!");
+        }else {
+            logger.error("message didn't route! reply-text: {}",returned.getReplyText());
+        }
     }else {
         logger.error("message sending failed! cause: {}",cause);
     }

@@ -100,7 +100,7 @@ public class AMQPConfig {
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,RabbitTemplate.ConfirmCallback confirmCallback){
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setConfirmCallback(confirmCallback);
-        rabbitTemplate.setMandatory(true); //For returned messages, the template’s mandatory property must be set to true
+        rabbitTemplate.setMandatory(true); //For returned messages(exchange exists but message didn't route), the template’s mandatory property must be set to true
         return rabbitTemplate;
     }
 
