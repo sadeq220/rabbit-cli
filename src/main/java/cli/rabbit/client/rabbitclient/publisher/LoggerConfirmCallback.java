@@ -26,15 +26,16 @@ public class LoggerConfirmCallback implements RabbitTemplate.ConfirmCallback {
      * nack, if it is available when the nack is generated.
      */
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-    if (ack){
+        String correlationId = correlationData.getId();
+        if (ack){
         ReturnedMessage returned = correlationData.getReturned();
         if (returned == null){
-            logger.info("message successfully published!");
+            logger.info("message with correlation-id: {} successfully published!",correlationId);
         }else {
-            logger.error("message didn't route! reply-text: {}",returned.getReplyText());
+            logger.error("message with correlation-id: {} didn't route! reply-text: {}",correlationId,returned.getReplyText());
         }
     }else {
-        logger.error("message sending failed! cause: {}",cause);
+        logger.error("message with correlation-id: {} sending failed! cause: {}",correlationId,cause);
     }
     }
 }

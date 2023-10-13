@@ -34,8 +34,8 @@ public class AMQPPublisher implements ApplicationRunner {
         String routingKey = args.getOptionValues(routingKeyOption).get(0);
         List<String> nonOptionArgs = args.getNonOptionArgs();
         Message message = this.constructAMQPMessage(nonOptionArgs.get(0));
-        logger.info("sending a message to exchange: {} with routing-key: {}",exchangeName,routingKey);
         CorrelationData correlationData = new CorrelationData();
+        logger.info("sending a message with correlation-id: {} to exchange: {} with routing-key: {}",correlationData.getId(),exchangeName,routingKey);
         rabbitTemplate.send(exchangeName,routingKey,message,correlationData);
     } else {
         logger.error("please provide message payload with options: {} and {}",exchangeOption,routingKeyOption);
