@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -34,7 +35,8 @@ public class AMQPPublisher implements ApplicationRunner {
         List<String> nonOptionArgs = args.getNonOptionArgs();
         Message message = this.constructAMQPMessage(nonOptionArgs.get(0));
         logger.info("sending a message to exchange: {} with routing-key: {}",exchangeName,routingKey);
-        rabbitTemplate.send(exchangeName,routingKey,message);
+        CorrelationData correlationData = new CorrelationData();
+        rabbitTemplate.send(exchangeName,routingKey,message,correlationData);
     } else {
         logger.error("please provide options: {} and {}",exchangeOption,routingKeyOption);
     }

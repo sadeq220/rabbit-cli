@@ -35,7 +35,16 @@ public class AMQPConfig {
         cachingConnectionFactory.setPort(5672);
         cachingConnectionFactory.setUsername("guest");
         cachingConnectionFactory.setPassword("guest");
-        cachingConnectionFactory.setConnectionNameStrategy(connectionFactory->"connection-name");
+        cachingConnectionFactory.setConnectionNameStrategy(connectionFactory->"rabbit-cli");
+        /**
+         * publisher returns and confirms
+         * We generally recommend setting the connection
+         * factory’s channelCacheSize to a large enough value so that the channel on which a
+         * message is published is returned to the cache instead of being closed
+         */
+        cachingConnectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.CORRELATED);
+        cachingConnectionFactory.setPublisherReturns(true);
+        cachingConnectionFactory.setChannelCacheSize(5);
         return cachingConnectionFactory;
     }
 
@@ -88,8 +97,10 @@ public class AMQPConfig {
      * 		  amqpTemplate sets reply-to header to an exclusive queue
      */
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,RabbitTemplate.ConfirmCallback confirmCallback){
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setConfirmCallback(confirmCallback);
+        rabbitTemplate.setMandatory(true); //For returned messages, the template’s mandatory property must be set to true
         return rabbitTemplate;
     }
 
