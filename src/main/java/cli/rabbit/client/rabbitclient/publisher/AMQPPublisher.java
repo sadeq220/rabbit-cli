@@ -29,7 +29,7 @@ public class AMQPPublisher implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
     logger.info("producer mode is enabled!");
-    if (args.containsOption(exchangeOption) && args.containsOption(routingKeyOption)){
+    if (args.containsOption(exchangeOption) && args.containsOption(routingKeyOption) && !args.getNonOptionArgs().isEmpty()){
         String exchangeName = args.getOptionValues(exchangeOption).get(0);
         String routingKey = args.getOptionValues(routingKeyOption).get(0);
         List<String> nonOptionArgs = args.getNonOptionArgs();
@@ -38,7 +38,7 @@ public class AMQPPublisher implements ApplicationRunner {
         CorrelationData correlationData = new CorrelationData();
         rabbitTemplate.send(exchangeName,routingKey,message,correlationData);
     } else {
-        logger.error("please provide options: {} and {}",exchangeOption,routingKeyOption);
+        logger.error("please provide message payload with options: {} and {}",exchangeOption,routingKeyOption);
     }
 
     }
