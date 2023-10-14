@@ -9,8 +9,9 @@
 
     <appender name="STDOUT"
               class="ch.qos.logback.core.ConsoleAppender" >
-        <encoder>
+        <encoder class="cli.rabbit.client.rabbitclient.logger.ConditionalPatternLayoutEncoder">
             <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr(%m%n){cyan}</pattern>
+            <errorPattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr(%m%n)</errorPattern>
             <charset>${CONSOLE_LOG_CHARSET}</charset>
         </encoder>
     </appender>
