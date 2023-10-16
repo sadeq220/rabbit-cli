@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * async call the shutdown to prevent deadlock
  * spring has registered a JVM shutdown hook for graceful shutdown
+ * System.exit() starts shutdown hooks
  */
 public class GracefulShutdown {
     @Async
