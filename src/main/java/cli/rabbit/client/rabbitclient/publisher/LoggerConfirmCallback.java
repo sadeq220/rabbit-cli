@@ -1,6 +1,6 @@
 package cli.rabbit.client.rabbitclient.publisher;
 
-import com.rabbitmq.client.ConfirmCallback;
+import cli.rabbit.client.rabbitclient.config.GracefulShutdown;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.ReturnedMessage;
@@ -18,6 +18,11 @@ import org.springframework.stereotype.Component;
  */
 public class LoggerConfirmCallback implements RabbitTemplate.ConfirmCallback {
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final GracefulShutdown gracefulShutdown;
+
+    public LoggerConfirmCallback(GracefulShutdown gracefulShutdown) {
+        this.gracefulShutdown = gracefulShutdown;
+    }
 
     @Override
     /**
@@ -37,5 +42,6 @@ public class LoggerConfirmCallback implements RabbitTemplate.ConfirmCallback {
     }else {
         logger.error("message with correlation-id: {} sending failed! cause: {}",correlationId,cause);
     }
+        gracefulShutdown.shutdown();//async call the shutdown to prevent deadlock
     }
 }
