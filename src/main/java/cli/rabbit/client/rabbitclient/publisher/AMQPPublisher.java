@@ -1,5 +1,6 @@
 package cli.rabbit.client.rabbitclient.publisher;
 
+import cli.rabbit.client.rabbitclient.config.GracefulShutdown;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -18,12 +19,14 @@ import java.util.List;
 @ConditionalOnProperty(name = "application.mode",havingValue = "producer")
 public class AMQPPublisher implements ApplicationRunner {
     private final RabbitTemplate rabbitTemplate;
+    private final GracefulShutdown gracefulShutdown;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     private final String exchangeOption="exchange";
     private final String routingKeyOption="routing-key";
 
-    public AMQPPublisher(RabbitTemplate rabbitTemplate) {
+    public AMQPPublisher(RabbitTemplate rabbitTemplate,GracefulShutdown gracefulShutdown) {
         this.rabbitTemplate = rabbitTemplate;
+        this.gracefulShutdown=gracefulShutdown;
     }
 
     @Override
@@ -39,6 +42,7 @@ public class AMQPPublisher implements ApplicationRunner {
         rabbitTemplate.send(exchangeName,routingKey,message,correlationData);
     } else {
         logger.error("please provide message payload with options: {} and {}",exchangeOption,routingKeyOption);
+        gracefulShutdown.unprovidedParameterShutdown();
     }
 
     }

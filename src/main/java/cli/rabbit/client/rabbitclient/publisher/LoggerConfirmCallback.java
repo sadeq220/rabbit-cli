@@ -36,12 +36,14 @@ public class LoggerConfirmCallback implements RabbitTemplate.ConfirmCallback {
         ReturnedMessage returned = correlationData.getReturned();
         if (returned == null){
             logger.info("message with correlation-id: {} successfully published!",correlationId);
+            gracefulShutdown.successfulShutdown();
+            return;//shutdown is async
         }else {
             logger.error("message with correlation-id: {} didn't route! reply-text: {}",correlationId,returned.getReplyText());
         }
     }else {
         logger.error("message with correlation-id: {} sending failed! cause: {}",correlationId,cause);
     }
-        gracefulShutdown.shutdown();//async call the shutdown to prevent deadlock
+        gracefulShutdown.rabbitErrorShutdown();
     }
 }

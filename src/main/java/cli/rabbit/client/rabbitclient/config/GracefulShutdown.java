@@ -4,9 +4,21 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
+/**
+ * async call the shutdown to prevent deadlock
+ * spring has registered a JVM shutdown hook for graceful shutdown
+ */
 public class GracefulShutdown {
     @Async
-    public void shutdown(){
-        System.exit(0);// spring has registered a JVM shutdown hook for graceful shutdown
+    public void successfulShutdown(){
+        System.exit(0);
+    }
+    @Async
+    public void unprovidedParameterShutdown(){
+        System.exit(5);
+    }
+    @Async
+    public void rabbitErrorShutdown(){
+        System.exit(1);
     }
 }
