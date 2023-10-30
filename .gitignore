@@ -33,3 +33,4 @@ build/
 .vscode/
 ### Logback files ###
 *.log
+*.sqlite
