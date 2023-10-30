@@ -1,5 +1,6 @@
 package cli.rabbit.client.rabbitclient.consumer;
 
+import cli.rabbit.client.rabbitclient.persistence.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -7,6 +8,7 @@ import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.core.MessageProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +19,12 @@ import java.util.Properties;
 public class AMQPConsumer implements MessageListener {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final Boolean verbose;
-    public AMQPConsumer(@Value("${verbose}")Boolean verbose){
+    private final PersistenceService persistenceService;
+
+    @Autowired
+    public AMQPConsumer(@Value("${verbose}")Boolean verbose,PersistenceService persistenceService){
         this.verbose=verbose;
+        this.persistenceService=persistenceService;
     }
 
     @Override
@@ -32,6 +38,7 @@ public class AMQPConsumer implements MessageListener {
                 MDC.put("verbose",ConsumerUtils.constructIniStyleString("headers",messageProperties.getHeaders()));
             }
             logger.info(ConsumerUtils.constructIniStyleString("message",properties));
+            persistenceService.persistMessage(message);
     }
 
     @Override
