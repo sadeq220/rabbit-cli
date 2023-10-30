@@ -72,6 +72,7 @@ public class AMQPConfig {
     @Bean
     /**
      * define messageListenerContainer
+     * it creates one channel for consumption in default, for more channels set concurrent consumer number but note that ordering will not be guaranteed
      */
     @ConditionalOnProperty(name = "application.mode",havingValue = "consumer")
     public SimpleMessageListenerContainer createMessageListenerContainer(ConnectionFactory connectionFactory,
