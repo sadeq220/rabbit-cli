@@ -25,21 +25,15 @@ public class AMQPConsumer implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        byte[] payload = message.getBody();
         MessageProperties messageProperties = message.getMessageProperties();
-        String contentEncoding = messageProperties.getContentEncoding();
-        try {
             Properties properties = new Properties();
-            properties.put("payload",new String(payload, contentEncoding==null ? "UTF-8" : contentEncoding));
+            properties.put("payload",ConsumerUtils.payloadAsString(message));
             properties.put("exchange",messageProperties.getReceivedExchange());
             properties.put("routing_key",messageProperties.getReceivedRoutingKey());
             if (verbose){
                 MDC.put("verbose",this.constructLogMessage(messageProperties.getHeaders()));
             }
             logger.info(this.constructLogMessage(properties));
-        } catch (UnsupportedEncodingException e) {
-            logger.error("content encoding not supported");
-        }
     }
 
     @Override
