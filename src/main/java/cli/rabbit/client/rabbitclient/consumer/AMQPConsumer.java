@@ -31,9 +31,9 @@ public class AMQPConsumer implements MessageListener {
             properties.put("exchange",messageProperties.getReceivedExchange());
             properties.put("routing_key",messageProperties.getReceivedRoutingKey());
             if (verbose){
-                MDC.put("verbose",this.constructLogMessage(messageProperties.getHeaders()));
+                MDC.put("verbose",ConsumerUtils.constructIniStyleString("headers",messageProperties.getHeaders()));
             }
-            logger.info(this.constructLogMessage(properties));
+            logger.info(ConsumerUtils.constructIniStyleString("message",properties));
     }
 
     @Override
@@ -51,12 +51,4 @@ public class AMQPConsumer implements MessageListener {
         MessageListener.super.onMessageBatch(messages);
     }
 
-    private String constructLogMessage(Map properties){
-        StringBuilder stringBuilder = new StringBuilder();
-        properties.forEach((k,v)-> {
-            String entry = String.format("%s=%s", k.toString(), v.toString());
-            stringBuilder.append(entry).append(" ");
-        });
-        return stringBuilder.toString();
-    }
 }
