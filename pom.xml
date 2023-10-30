@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>cli.rabbit.client</groupId>
 	<artifactId>rabbit-client</artifactId>
-	<version>1.1.0</version>
+	<version>2.0.0</version>
 	<name>rabbit-client</name>
 	<description>Java based rabbit client</description>
 	<properties>
