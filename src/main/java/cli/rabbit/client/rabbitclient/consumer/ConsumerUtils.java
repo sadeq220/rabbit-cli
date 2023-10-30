@@ -26,8 +26,10 @@ public final class ConsumerUtils {
 
     public static String constructIniStyleString(String sectionName,Map entries){
         StringBuilder stringBuilder = new StringBuilder();
-        String section = String.format("[%s] ", sectionName);
-        stringBuilder.append(section);
+        if (sectionName != null) {
+            String section = String.format("[%s] ", sectionName);
+            stringBuilder.append(section);
+        }
         entries.forEach((k,v)->{
             String entry = String.format("%s=%s", k.toString(), v.toString());
             stringBuilder.append(entry).append(" ");
