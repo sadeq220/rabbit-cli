@@ -20,3 +20,6 @@ if  $_java -version &>/dev/null ; then
         exit 1;
     fi
 fi
+abs=$(dirname $(realpath "$0"))
+jar_abs=$(realpath "$abs/../src/"rabbit-client-?.?.?.jar)
+$_java -jar "$jar_abs" "$@"
