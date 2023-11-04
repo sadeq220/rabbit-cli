@@ -40,6 +40,12 @@ public class AMQPPublisher implements ApplicationRunner {
         CorrelationData correlationData = new CorrelationData();
         logger.info("sending a message with correlation-id: {} to exchange: {} with routing-key: {}",correlationData.getId(),exchangeName,routingKey);
         rabbitTemplate.send(exchangeName,routingKey,message,correlationData);
+    } else if (args.containsOption("queue") && !args.getNonOptionArgs().isEmpty()) {
+        String queueName = args.getOptionValues("queue").get(0);
+        Message message = this.constructAMQPMessage(args.getNonOptionArgs().get(0));
+        CorrelationData correlationData = new CorrelationData();
+        logger.info("sending a message with correlation-id: {} to queue: {}",correlationData.getId(),queueName);
+        rabbitTemplate.send("",queueName,message,correlationData);
     } else {
         logger.error("please provide message payload with options: {} and {}",exchangeOption,routingKeyOption);
         gracefulShutdown.unprovidedParameterShutdown();
