@@ -79,7 +79,7 @@ case "$COMMAND" in
         $_java -jar -Dapplication.mode=producer "$jar_abs" --queue="$queue" --exchange="$exchange" --routing-key="$routingKey" "$payload"
         ;;
     *)
-        echo "Invalid command: $COMMAND"
+        echo "Invalid command${COMMAND:+: $COMMAND}"
         usage 1
         ;;
 esac
