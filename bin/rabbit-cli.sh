@@ -21,17 +21,17 @@ if  $_java -version &>/dev/null ; then
     fi
 fi
 
-# help messages
+# declare help function
 function usage() {
     echo "Usage: $0 <command> <options>"
     echo "supported commands: {publish,consume}"
     echo "e.g. : $0 consume -q queueName"
+    exit "$1"
 }
 # user wants help
 getopts ":h" opt
 if [ "$opt" == "h" ]; then
-    usage
-    exit 0;
+    usage 0
 fi
 
 # Parse the command and arguments
@@ -57,8 +57,7 @@ while getopts ":q:e:r:p:" opt; do
             payload=${OPTARG}
             ;;
         *)
-            usage
-            exit 1;
+            usage 1
             ;;
     esac
 done
@@ -81,7 +80,6 @@ case "$COMMAND" in
         ;;
     *)
         echo "Invalid command: $COMMAND"
-        usage
-        exit 1
+        usage 1
         ;;
 esac
