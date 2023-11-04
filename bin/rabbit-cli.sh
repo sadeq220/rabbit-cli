@@ -22,4 +22,24 @@ if  $_java -version &>/dev/null ; then
 fi
 abs=$(dirname $(realpath "$0"))
 jar_abs=$(realpath "$abs/../src/"rabbit-client-?.?.?.jar)
-$_java -jar "$jar_abs" "$@"
+
+# Parse the command and arguments
+COMMAND="$1"
+shift
+ARGS="$@"
+
+case "$COMMAND" in
+
+    "publish")
+        $_java -jar -Dapplication.mode=producer "$jar_abs" "$@"
+        ;;
+    "consume")
+        $_java -jar -Dapplication.mode=consumer "$jar_abs" "$@"
+        ;;
+    *)
+        echo "Invalid command: $COMMAND"
+        echo "supported commands: {publish,consume}"
+        echo "Usage: $0 <command> <arguments>"
+        exit 1
+        ;;
+esac
