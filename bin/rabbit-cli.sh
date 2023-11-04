@@ -24,7 +24,7 @@ fi
 # declare help function
 function usage() {
     echo "Usage: $0 <command> <options>"
-    echo "supported commands: {publish,consume}"
+    echo "supported commands: {publish|produce,consume}"
     echo "e.g. : $0 consume -q queueName"
     exit "$1"
 }
@@ -75,8 +75,8 @@ case "$COMMAND" in
           $_java -jar -Dapplication.mode=consumer "$jar_abs"
         fi
         ;;
-    "publish")
-        $_java -jar -Dapplication.mode=producer "$jar_abs" --queue="$queue" --exchange="$exchange" --routing-key="$routingKey" "$payload"
+    "publish" | "produce")
+        $_java -jar -Dapplication.mode=producer "$jar_abs" "${queue:+--queue=$queue}" "${exchange:+--exchange=$exchange}" "${routingKey:+--routing-key=$routingKey}" "$payload"
         ;;
     *)
         echo "Invalid command${COMMAND:+: $COMMAND}"
