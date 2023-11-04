@@ -2,6 +2,9 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
 
+<!-- The maven assembly plugin defines a collection of files usually distributed in an archive format such as zip, tar, or tar.gz that is generated from a project.
+     For example, a project could produce a ZIP assembly which contains a project's JAR artifact in the root directory, the runtime dependencies in a lib/ directory, and a shell script to launch a stand-alone application.
+ -->
     <id>tarball</id>
 
     <formats>
