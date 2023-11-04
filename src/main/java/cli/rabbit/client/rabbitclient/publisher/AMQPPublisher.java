@@ -30,21 +30,22 @@ public class AMQPPublisher implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
     logger.info("producer mode is enabled!");
     if (args.containsOption(exchangeOption) && args.containsOption(routingKeyOption) && !args.getNonOptionArgs().isEmpty()){
         String exchangeName = args.getOptionValues(exchangeOption).get(0);
         String routingKey = args.getOptionValues(routingKeyOption).get(0);
-        List<String> nonOptionArgs = args.getNonOptionArgs();
-        Message message = this.constructAMQPMessage(nonOptionArgs.get(0));
+        String payload = args.getNonOptionArgs().get(0);
+        Message message = this.constructAMQPMessage(payload);
         CorrelationData correlationData = new CorrelationData();
-        logger.info("sending a message with correlation-id: {} to exchange: {} with routing-key: {}",correlationData.getId(),exchangeName,routingKey);
+        logger.info("sending a message with correlation-id: {} to exchange: {} with routing-key: {} and payload: {}",correlationData.getId(),exchangeName,routingKey,payload);
         rabbitTemplate.send(exchangeName,routingKey,message,correlationData);
     } else if (args.containsOption("queue") && !args.getNonOptionArgs().isEmpty()) {
         String queueName = args.getOptionValues("queue").get(0);
-        Message message = this.constructAMQPMessage(args.getNonOptionArgs().get(0));
+        String payload = args.getNonOptionArgs().get(0);
+        Message message = this.constructAMQPMessage(payload);
         CorrelationData correlationData = new CorrelationData();
-        logger.info("sending a message with correlation-id: {} to queue: {}",correlationData.getId(),queueName);
+        logger.info("sending a message with correlation-id: {} to queue: {} with payload: {}",correlationData.getId(),queueName,payload);
         rabbitTemplate.send("",queueName,message,correlationData);
     } else {
         logger.error("please provide message payload with options: {} and {}",exchangeOption,routingKeyOption);
