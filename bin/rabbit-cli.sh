@@ -20,26 +20,68 @@ if  $_java -version &>/dev/null ; then
         exit 1;
     fi
 fi
-abs=$(dirname $(realpath "$0"))
-jar_abs=$(realpath "$abs/../src/"rabbit-client-?.?.?.jar)
+
+# help messages
+function usage() {
+    echo "Usage: $0 <command> <options>"
+    echo "supported commands: {publish,consume}"
+    echo "e.g. : $0 consume -q queueName"
+}
+# user wants help
+getopts ":h" opt
+if [ "$opt" == "h" ]; then
+    usage
+    exit 0;
+fi
 
 # Parse the command and arguments
 COMMAND="$1"
 shift
-ARGS="$@"
+
+while getopts ":q:e:r:p:" opt; do
+    case "$opt" in
+        q)
+            echo "set the queue name to: $OPTARG"
+            queue=${OPTARG}
+            ;;
+        e)
+            echo "set the exchange name(used only for publish) to: $OPTARG"
+            exchange=${OPTARG}
+            ;;
+        r)
+            echo "set the routing-key(used only for publish) to: $OPTARG "
+            routingKey=${OPTARG}
+            ;;
+        p)
+            echo "set the payload(used only for publish) to: $OPTARG"
+            payload=${OPTARG}
+            ;;
+        *)
+            usage
+            exit 1;
+            ;;
+    esac
+done
+
+# Find the jar absolute path
+abs=$(dirname "$(realpath "$0")")
+jar_abs=$(realpath "$abs/../src/"rabbit-client-?.?.?.jar)
+
 
 case "$COMMAND" in
-
-    "publish")
-        $_java -jar -Dapplication.mode=producer "$jar_abs" "$@"
-        ;;
     "consume")
-        $_java -jar -Dapplication.mode=consumer "$jar_abs" "$@"
+        if [ -n "$queue" ]; then
+          $_java -Dapplication.mode=consumer -Damqp.queue.listener="$queue" -jar "$jar_abs"
+        else
+          $_java -jar -Dapplication.mode=consumer "$jar_abs"
+        fi
+        ;;
+    "publish")
+        $_java -jar -Dapplication.mode=producer "$jar_abs" --queue="$queue" --exchange="$exchange" --routing-key="$routingKey" "$payload"
         ;;
     *)
         echo "Invalid command: $COMMAND"
-        echo "supported commands: {publish,consume}"
-        echo "Usage: $0 <command> <arguments>"
+        usage
         exit 1
         ;;
 esac
