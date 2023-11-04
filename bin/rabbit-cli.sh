@@ -76,7 +76,7 @@ case "$COMMAND" in
         fi
         ;;
     "publish" | "produce")
-        $_java -jar -Dapplication.mode=producer "$jar_abs" "${queue:+--queue=$queue}" "${exchange:+--exchange=$exchange}" "${routingKey:+--routing-key=$routingKey}" "$payload"
+        $_java -jar -Dapplication.mode=producer "$jar_abs" ${queue:+--queue=$queue} --exchange="$exchange" ${routingKey:+--routing-key=$routingKey} "$payload"
         ;;
     *)
         echo "Invalid command${COMMAND:+: $COMMAND}"
