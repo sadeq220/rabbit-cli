@@ -65,18 +65,18 @@ done
 # Find the jar absolute path
 abs=$(dirname "$(realpath "$0")")
 jar_abs=$(realpath "$abs/../src/"rabbit-client-?.?.?.jar)
-
+log_abs=$(realpath "$abs/../log/")
 
 case "$COMMAND" in
     "consume")
         if [ -n "$queue" ]; then
-          $_java -Dapplication.mode=consumer -Damqp.queue.listener="$queue" -jar "$jar_abs"
+          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer -Damqp.queue.listener="$queue" -jar "$jar_abs"
         else
-          $_java -jar -Dapplication.mode=consumer "$jar_abs"
+          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer -jar "$jar_abs"
         fi
         ;;
     "publish" | "produce")
-        $_java -jar -Dapplication.mode=producer "$jar_abs" ${queue:+--queue=$queue} --exchange="$exchange" ${routingKey:+--routing-key=$routingKey} "$payload"
+        $_java -Dlog.file.path="$log_abs" -Dapplication.mode=producer -jar "$jar_abs" ${queue:+--queue=$queue} --exchange="$exchange" ${routingKey:+--routing-key=$routingKey} "$payload"
         ;;
     *)
         echo "Invalid command${COMMAND:+: $COMMAND}"
