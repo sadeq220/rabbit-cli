@@ -38,7 +38,7 @@ fi
 COMMAND="$1"
 shift
 
-while getopts ":q:e:r:p:" opt; do
+while getopts ":q:e:r:p:v" opt; do
     case "$opt" in
         q)
             echo "set the queue name to: $OPTARG"
@@ -56,6 +56,10 @@ while getopts ":q:e:r:p:" opt; do
             echo "set the payload(used only for publish) to: $OPTARG"
             payload=${OPTARG}
             ;;
+        v)
+            echo "verbose log enabled."
+            verbose=true
+            ;;
         *)
             usage 1
             ;;
@@ -70,9 +74,9 @@ log_abs=$(realpath "$abs/../log/")
 case "$COMMAND" in
     "consume")
         if [ -n "$queue" ]; then
-          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer -Damqp.queue.listener="$queue" -jar "$jar_abs"
+          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer ${verbose:+-Dverbose=true} -Damqp.queue.listener="$queue" -jar "$jar_abs"
         else
-          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer -jar "$jar_abs"
+          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer ${verbose:+-Dverbose=true} -jar "$jar_abs"
         fi
         ;;
     "publish" | "produce")
