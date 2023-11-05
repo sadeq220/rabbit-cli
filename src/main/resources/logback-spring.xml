@@ -5,7 +5,7 @@
 
     <property resource="application.properties" />
     <property name="MAVEN_VERSION" value="${maven.project.version}" />
-    <springProperty name="LOG_PATH" source="log.file.path" defaultValue="." />
+    <springProperty name="LOG_PATH" source="log.file.path" defaultValue="./log/" />
 
     <appender name="STDOUT"
               class="ch.qos.logback.core.ConsoleAppender" >
