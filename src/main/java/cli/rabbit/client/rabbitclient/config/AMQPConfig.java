@@ -21,7 +21,10 @@ public class AMQPConfig {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Bean
-    public ConnectionFactory connectionAndChannelsToRabbitmqMessageBroker(){
+    public ConnectionFactory connectionAndChannelsToRabbitmqMessageBroker(@Value("${amqp.host}") String amqpHost,
+                                                                          @Value("${amqp.port}") Integer amqpPort,
+                                                                          @Value("${amqp.username}") String amqpUsername,
+                                                                          @Value("${amqp.password}") String amqpPassword){
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
         /**
          * A ConnectionFactory implementation that (when the cache mode is CachingConnectionFactory.CacheMode.CHANNEL (default) returns the same Connection from all createConnection() calls,
@@ -31,10 +34,10 @@ public class AMQPConfig {
          *
          * default cache size is one
          */
-        cachingConnectionFactory.setHost("localhost");
-        cachingConnectionFactory.setPort(5672);
-        cachingConnectionFactory.setUsername("guest");
-        cachingConnectionFactory.setPassword("guest");
+        cachingConnectionFactory.setHost(amqpHost);
+        cachingConnectionFactory.setPort(amqpPort);
+        cachingConnectionFactory.setUsername(amqpUsername);
+        cachingConnectionFactory.setPassword(amqpPassword);
         cachingConnectionFactory.setConnectionNameStrategy(connectionFactory->"rabbit-cli");
         /**
          * publisher returns and confirms
