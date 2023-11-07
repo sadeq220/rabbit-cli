@@ -68,7 +68,7 @@ done
 
 # Find the jar absolute path
 abs=$(dirname "$(realpath "$0")")
-jar_abs=$(realpath "$abs/../src/"rabbit-client-?.?.?.jar)
+jar_abs=$(realpath "$abs/../src/"rabbit-cli-?.?.?.jar)
 log_abs=$(realpath "$abs/../log/")
 
 case "$COMMAND" in
