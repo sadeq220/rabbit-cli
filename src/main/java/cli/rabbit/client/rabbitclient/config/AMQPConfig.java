@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -24,7 +25,8 @@ public class AMQPConfig {
     public ConnectionFactory connectionAndChannelsToRabbitmqMessageBroker(@Value("${amqp.host}") String amqpHost,
                                                                           @Value("${amqp.port}") Integer amqpPort,
                                                                           @Value("${amqp.username}") String amqpUsername,
-                                                                          @Value("${amqp.password}") String amqpPassword){
+                                                                          @Value("${amqp.password}") String amqpPassword,
+                                                                          ConnectionListener connectionListener){
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
         /**
          * A ConnectionFactory implementation that (when the cache mode is CachingConnectionFactory.CacheMode.CHANNEL (default) returns the same Connection from all createConnection() calls,
@@ -48,6 +50,8 @@ public class AMQPConfig {
         cachingConnectionFactory.setPublisherConfirmType(CachingConnectionFactory.ConfirmType.CORRELATED);
         cachingConnectionFactory.setPublisherReturns(true);
         cachingConnectionFactory.setChannelCacheSize(5);
+
+        cachingConnectionFactory.addConnectionListener(connectionListener);
         return cachingConnectionFactory;
     }
 
@@ -84,7 +88,7 @@ public class AMQPConfig {
                                                                          RetryOperationsInterceptor retryOperationsInterceptor){
         SimpleMessageListenerContainer messageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         messageListenerContainer.addQueueNames(queueName);
-        logger.info("listening on queue: {}",queueName);
+        logger.info("consumer mode is enabled. Subscribe to queue: {}",queueName);
         messageListenerContainer.setMessageListener(messageListener);
         messageListenerContainer.setAdviceChain(retryOperationsInterceptor);
         messageListenerContainer.setDefaultRequeueRejected(false);
