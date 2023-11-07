@@ -2,6 +2,11 @@
 Rabbit-cli is a command-line interface (CLI) tool built on Spring Boot for interacting with RabbitMQ.      
 It provides easy-to-use commands for both publishing and consuming messages from RabbitMQ queues.    
 
+### Requirements   
+Before you use rabbit-cli, make sure you have the following installed:    
+- Java 11 or higher: Ensure you have Java Development Kit (JDK) 11 or a newer version installed on your system.
+- AMQP Broker: Rabbit-cli requires a running AMQP broker, such as RabbitMQ, to interact with. Make sure you have the necessary broker configuration details handy before using rabbit-cli.
+
 ### Setup rabbit-cli
 After you have downloaded the tarball file or built it from the source code, follow these steps:     
 (Note: replace the `${v}` placeholder with the version of rabbit-cli you have)
