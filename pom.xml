@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>cli.rabbit.client</groupId>
-	<artifactId>rabbit-client</artifactId>
+	<artifactId>rabbit-cli</artifactId>
 	<version>2.0.0</version>
 	<name>rabbit-client</name>
 	<description>Java based rabbit client</description>
