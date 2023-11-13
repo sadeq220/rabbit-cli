@@ -23,7 +23,8 @@ Now, the `rabbit-cli` command should be accessible from your commandline.
 ### Usage
 Currently, the rabbit-cli command supports two operations:   
 - consume
-- publish
+- publish    
+
 To subscribe to a queue and consume from it:    
 ```shell
 rabbit-cli consume -q ${queueName}
