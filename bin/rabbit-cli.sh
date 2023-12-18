@@ -12,7 +12,7 @@ if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
 fi
 # check java version
 if  $_java -version &>/dev/null ; then
-    java_version=$($_java -version |& awk -F '"' '/version/ {print $2}')
+    java_version=$("$_java" -version |& awk -F '"' '/version/ {print $2}')
     printf 'java version is %s \n' "$java_version"
     major_version=$(cut -d. -f1 <<< "$java_version")
     if [ "$major_version" -lt 11 ]; then
@@ -74,13 +74,13 @@ log_abs=$(realpath "$abs/../log/")
 case "$COMMAND" in
     "consume")
         if [ -n "$queue" ]; then
-          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer ${verbose:+-Dverbose=true} -Damqp.queue.listener="$queue" -jar "$jar_abs"
+          "$_java" -Dlog.file.path="$log_abs" -Dapplication.mode=consumer ${verbose:+-Dverbose=true} -Damqp.queue.listener="$queue" -jar "$jar_abs"
         else
-          $_java -Dlog.file.path="$log_abs" -Dapplication.mode=consumer ${verbose:+-Dverbose=true} -jar "$jar_abs"
+          "$_java" -Dlog.file.path="$log_abs" -Dapplication.mode=consumer ${verbose:+-Dverbose=true} -jar "$jar_abs"
         fi
         ;;
     "publish" | "produce")
-        $_java -Dlog.file.path="$log_abs" -Dapplication.mode=producer -jar "$jar_abs" ${queue:+--queue=$queue} --exchange="$exchange" ${routingKey:+--routing-key=$routingKey} "$payload"
+        "$_java" -Dlog.file.path="$log_abs" -Dapplication.mode=producer -jar "$jar_abs" ${queue:+--queue=$queue} --exchange="$exchange" ${routingKey:+--routing-key=$routingKey} "$payload"
         ;;
     *)
         echo "Invalid command${COMMAND:+: $COMMAND}"
