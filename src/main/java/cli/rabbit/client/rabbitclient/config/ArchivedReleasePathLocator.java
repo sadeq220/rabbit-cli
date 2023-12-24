@@ -2,7 +2,9 @@ package cli.rabbit.client.rabbitclient.config;
 
 import cli.rabbit.client.rabbitclient.RabbitClientApplication;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,23 +23,23 @@ public class ArchivedReleasePathLocator {
     }
 
     public static Path getRootDirectoryPath(){
-        String jarFilePath = getJarFilePath();
+        URI jarFilePath = getJarFilePath();
         Path rootDataDirectory = Path.of(jarFilePath).normalize().getParent().getParent();
         return rootDataDirectory;
     }
 
     public static Boolean isArchivedRelease(){
-      return getJarFilePath().endsWith(".jar");
+      return getJarFilePath().getPath().endsWith(".jar");
     }
 
-    public static String getJarFilePath(){
+    public static URI getJarFilePath(){
         try {
             String jarFilePath = RabbitClientApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             if (jarFilePath.contains("!")) {
                 jarFilePath = jarFilePath.substring(0, jarFilePath.indexOf('!'));
                 jarFilePath = new URL(jarFilePath).getPath();
             }
-            return jarFilePath;
+            return new File(jarFilePath).toURI();// OS-agnostic file system path(windows compatible)
         }catch (IOException ex){
             throw new RuntimeException("jarFilePath couldn't be obtained!",ex);
         }
