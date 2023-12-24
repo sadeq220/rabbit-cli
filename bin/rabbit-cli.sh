@@ -2,7 +2,7 @@
 declare _java;
 # find executable java
 if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
-    printf 'pick java from JAVA_HOME env variable';
+    printf 'pick java from JAVA_HOME env variable \n';
     _java="$JAVA_HOME/bin/java"
   elif  type -p java &>/dev/null ; then
     _java=java
@@ -16,7 +16,7 @@ if  $_java -version &>/dev/null ; then
     printf 'java version is %s \n' "$java_version"
     major_version=$(cut -d. -f1 <<< "$java_version")
     if [ "$major_version" -lt 11 ]; then
-        printf 'rabbit-cli needs java version 11 or above!'
+        printf 'rabbit-cli needs java version 11 or above! \n'
         exit 1;
     fi
 fi
